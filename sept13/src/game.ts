@@ -7,7 +7,7 @@ export class Game extends Application {
     constructor(opts: any) {
         super(opts);
         this.preload([
-            { name: 'wheel', url: 'assets/images.jpg' }
+            { name:"wheel",url:"assets/i.jpg"},
         ], this.onLoad.bind(this));
     }
     preload(list: any[], cb: () => {}): void {
