@@ -1,4 +1,4 @@
-import { Application } from 'pixi.js';
+import { Application,Sprite,TilingSprite } from 'pixi.js';
 import { Game } from './Game';
 import './css/main.css';
 
@@ -23,3 +23,27 @@ window.onload = ()=>{
     });
     gameDiv.appendChild(app.view);
 }
+//  onimage(){
+//     // const runner=new Sprite(this.loader.resources['background'].texture)
+//     console.log('hi')
+//   let bgx = 0;
+// let bgSpeed = 1;
+// let bgfront: any;
+// initlevel();
+//  function imagePlay(delta:any){
+//   this.updateBg();
+// }
+// function updateBg() {
+//   bgx = bgx + bgSpeed;
+//   bgfront.tilePosition.x = bgx;
+// }
+// function createbg(texture: any){
+//   let tilling = new TilingSprite(texture, innerWidth, innerHeight);
+//   tilling.position.set(0, 0);
+//   this.stage.addChild(tilling);
+//   return tilling;
+// }
+// function initlevel(){
+//   bgfront = createbg(this.loader.resources['background'].texture);
+//   this.ticker.add(imagePlay);
+// }}
