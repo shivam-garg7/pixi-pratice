@@ -1,13 +1,16 @@
 import { Application, Sprite,Text } from 'pixi.js';
 import { gsap } from 'gsap';
 import { sound } from '@pixi/sound';
+import * as particles from '@pixi/particle-emitter'
 export class Game extends Application {
     private spin: boolean;
-    private sliceAngle = 360 / 10;
+    private sliceAngle = 360 / 8;
     constructor(opts: any) {
         super(opts);
         this.preload([
-            { name:"wheel",url:"assets/i.jpg"},
+            { name: 'wheel', url: 'assets/wheel2.png' },
+            { name: 'pointer', url: 'assets/ptr4.png' },
+            { name:'spin',url:"assets/spin.png"},
         ], this.onLoad.bind(this));
     }
     preload(list: any[], cb: () => {}): void {
@@ -15,10 +18,10 @@ export class Game extends Application {
         this.loader.load(cb);
     }
     winnerpage(ran:number):void{
-        let arr=[900,800,700,600,500,400,300,200,100,1000];
+        let arr=[100,800,700,600,500,400,300,200];
         let result="";
         console.log(arr[ran]);
-        if(ran==0||ran==1||ran==2||ran==3||ran==4||ran==9){
+        if(ran==1||ran==2||ran==3||ran==4){
              result="you are lucky"
              sound.add('my-sound1', './assets/winprize.mp3');
              sound.play('my-sound1');
@@ -29,7 +32,7 @@ export class Game extends Application {
              sound.play('my-sound2');
             result="Wish you luck,try again"
         }
-        let text = new Text("Congrats you win the :"+arr[ran]+"coins\n"+result,{fontFamily : 'Arial', fontSize: 24, fill : 0xffffff, align : 'center'});
+        let text = new Text("Congrats you win the :"+arr[ran]+"$ coins\n"+result,{fontFamily : 'Arial', fontSize: 24, fill : 0xffffff, align : 'center'});
         text.x=300;
         text.y=300;
         // wheel.visible=false
@@ -49,10 +52,24 @@ export class Game extends Application {
         wheel.x = this.screen.width / 2;
         wheel.y = this.screen.height / 2;
         this.stage.addChild(wheel);
-        wheel.interactive = true;
-        wheel.buttonMode = true;
+       
+       
         console.log(this.stage);
-        wheel.on('pointerup', () => {
+        const pointer = new Sprite(this.loader.resources['pointer'].texture);
+        pointer.x=370
+        pointer.y=90
+        pointer.visible = true;
+        this.stage.addChild(pointer);
+        const spin = new Sprite(this.loader.resources['spin'].texture);
+        // spin.anchor.set(0.5);
+        spin.scale.set(.2)
+        spin.x=380;
+        spin.y=270;
+        spin.interactive = true;
+        spin.buttonMode = true;
+        this.stage.addChild(spin);
+        spin.on('pointerup', () => {
+           
             let Randomly = require("weighted-randomly-select");
             let random = Randomly.select([{
                 chance: 0.01, result: 0
@@ -70,22 +87,21 @@ export class Game extends Application {
                 chance: 0.95, result: 6
               }, {
                 chance: 0.95, result: 7
-              }, {
-                chance: 0.96, result: 8
-              },{
-                chance: 0.001, result: 9
-              }]);
+              },
+              ]);
             let stopAngle = random * this.sliceAngle;
             sound.add('my-sound', './assets/spinning_sound.wav');
              sound.play('my-sound');
              setTimeout(() => {
+              spin.visible=false
                 gsap.fromTo(wheel, { angle: 0 }, { angle: 3600 + stopAngle, duration: 6, ease: 'expo.out' });
-             }, 1300);
+             }, 500);
            
-            wheel.interactive=false;
+            spin.interactive=false;
             setTimeout(() => {
                 wheel.visible=false;
-                
+                pointer.visible=false;
+                spin.visible=false;
                 this.winnerpage(random);
                
             }, 7000);
